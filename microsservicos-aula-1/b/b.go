@@ -11,6 +11,7 @@ import (
 
 type Result struct {
 	Status string
+	Message string
 }
 
 func main() {
@@ -21,18 +22,21 @@ func main() {
 func home(w http.ResponseWriter, r *http.Request) {
 	coupon := r.PostFormValue("coupon")
 	ccNumber := r.PostFormValue("ccNumber")
+	productId := r.PostFormValue("productId")
 
-	resultCoupon := makeHttpCall("http://localhost:9092", coupon)
+	resultCoupon := makeHttpCall("http://localhost:9092", coupon, productId)
 
 	result := Result{Status: "declined"}
 
 	if ccNumber == "1" {
 		result.Status = "approved"
+		result.Message = resultCoupon.Message
 	}
 
 	if resultCoupon.Status == "invalid" {
 		result.Status = "invalid coupon"
 	}
+
 
 	jsonData, err := json.Marshal(result)
 	if err != nil {
@@ -43,10 +47,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 
 
-func makeHttpCall(urlMicroservice string, coupon string) Result {
+func makeHttpCall(urlMicroservice string, coupon string, productId string) Result {
 
 	values := url.Values{}
 	values.Add("coupon", coupon)
+	values.Add("productId", productId)
 
 	res, err := http.PostForm(urlMicroservice, values)
 	if err != nil {

@@ -40,6 +40,10 @@
                     <div class="input-group">
                         <input type="text" class="form-control" name="coupon" placeholder="Cupom">
                     </div>
+
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="productId" placeholder="Id do produto 1, 2 ou 3">
+                    </div>
                 </div>
                 <div class="col-md-8 order-md-1">
                     <h4 class="mb-3">Dados pessoais</h4>
@@ -86,7 +90,7 @@
             </div>
         </form>
     {{ else}}
-        <h4>Resultado da operação: {{ .Status }}</h4>
+        <h4>Resultado da operação: {{ .Status }} - {{ .Message }}</h4>
     {{end}}
 
     <footer class="my-5 pt-5 text-muted text-center text-small">

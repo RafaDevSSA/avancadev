@@ -12,6 +12,7 @@ import (
 
 type Result struct {
 	Status string
+	Message string
 }
 
 func main() {
@@ -27,17 +28,18 @@ func home(w http.ResponseWriter, r *http.Request) {
 
 func process(w http.ResponseWriter, r *http.Request) {
 
-	result := makeHttpCall("http://localhost:9091", r.FormValue("coupon"), r.FormValue("cc-number"))
+	result := makeHttpCall("http://localhost:9091", r.FormValue("coupon"), r.FormValue("cc-number"),  r.FormValue("productId"))
 
 	t := template.Must(template.ParseFiles("templates/home.html"))
 	t.Execute(w, result)
 }
 
-func makeHttpCall(urlMicroservice string, coupon string, ccNumber string) Result {
+func makeHttpCall(urlMicroservice string, coupon string, ccNumber string, productId string) Result {
 
 	values := url.Values{}
 	values.Add("coupon", coupon)
 	values.Add("ccNumber", ccNumber)
+	values.Add("productId", productId)
 
 	retryClient := retryablehttp.NewClient()
 	retryClient.RetryMax = 5
